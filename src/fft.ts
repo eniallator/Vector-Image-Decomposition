@@ -1,50 +1,47 @@
-import type { ComplexSignals } from "./complexSignals.ts";
+import { createComplex, unsafeComplexNumber } from "./complex.ts";
 import { safeGet } from "./safeGet.ts";
 
-// Signals have lengths of 2^x
+import type { ComplexNumber } from "./complex.ts";
+
+// Signals has length 2^x
 export const computeFft = (
-  signals: ComplexSignals,
+  signals: ComplexNumber[],
   inverse: boolean
-): ComplexSignals => {
-  const n = signals.re.length;
+): ComplexNumber[] => {
+  const n = signals.length;
   if (n <= 1) return signals;
 
   const halfN = n / 2;
 
-  const reEven = new Float32Array(halfN);
-  const imEven = new Float32Array(halfN);
-  const reOdd = new Float32Array(halfN);
-  const imOdd = new Float32Array(halfN);
+  const even = new Array<ComplexNumber>(halfN);
+  const odd = new Array<ComplexNumber>(halfN);
 
   for (let i = 0; i < halfN; i++) {
-    reEven[i] = safeGet(signals.re, 2 * i);
-    imEven[i] = safeGet(signals.im, 2 * i);
-    reOdd[i] = safeGet(signals.re, 2 * i + 1);
-    imOdd[i] = safeGet(signals.im, 2 * i + 1);
+    even[i] = safeGet(signals, 2 * i);
+    odd[i] = safeGet(signals, 2 * i + 1);
   }
 
-  const evenFFT = computeFft({ re: reEven, im: imEven }, inverse);
-  const oddFFT = computeFft({ re: reOdd, im: imOdd }, inverse);
+  const evenFFT = computeFft(even, inverse);
+  const oddFFT = computeFft(odd, inverse);
 
-  const outRe = new Float32Array(n);
-  const outIm = new Float32Array(n);
+  const out = new Array<ComplexNumber>(n);
 
   for (let k = 0; k < halfN; k++) {
     const angle = ((inverse ? 1 : -1) * (2 * Math.PI * k)) / n;
     const twiddleRe = Math.cos(angle);
     const twiddleIm = Math.sin(angle);
 
-    const tRe =
-      safeGet(oddFFT.re, k) * twiddleRe - safeGet(oddFFT.im, k) * twiddleIm;
-    const tIm =
-      safeGet(oddFFT.re, k) * twiddleIm + safeGet(oddFFT.im, k) * twiddleRe;
+    const currOdd = safeGet(oddFFT, k);
+    const currEven = safeGet(evenFFT, k);
 
-    outRe[k] = safeGet(evenFFT.re, k) + tRe;
-    outIm[k] = safeGet(evenFFT.im, k) + tIm;
+    const t = createComplex(
+      currOdd.x() * twiddleRe - currOdd.y() * twiddleIm,
+      currOdd.x() * twiddleIm + currOdd.y() * twiddleRe
+    );
 
-    outRe[k + halfN] = safeGet(evenFFT.re, k) - tRe;
-    outIm[k + halfN] = safeGet(evenFFT.im, k) - tIm;
+    out[k] = unsafeComplexNumber(currEven.copy().add(t));
+    out[k + halfN] = unsafeComplexNumber(currEven.copy().sub(t));
   }
 
-  return { re: outRe, im: outIm };
+  return out;
 };

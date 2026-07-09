@@ -1,9 +1,7 @@
 import { cartesianToPolar, polarToCartesian } from "niall-utils/math";
 import { Vector } from "vectyped";
 
-import { safeGet } from "./safeGet.ts";
-
-import type { ComplexSignals } from "./complexSignals.ts";
+import type { ComplexNumber } from "./complex.ts";
 
 export interface Epicycle {
   freq: number;
@@ -15,25 +13,20 @@ export interface Epicycle {
 // bin k is a circle of radius `amp` spinning at `freq` turns per unit t,
 // starting at `phase`. Sorted by descending amplitude for the classic
 // biggest-circle-first look.
-export const toEpicycles = (signals: ComplexSignals): Epicycle[] => {
-  const length = signals.re.length;
-
-  return new Array(length)
-    .fill(undefined)
-    .map((_, k) => {
+export const toEpicycles = (signals: ComplexNumber[]): Epicycle[] =>
+  signals
+    .map((num, k) => {
       const [amp, phase] = cartesianToPolar(
-        safeGet(signals.re, k) / length,
-        safeGet(signals.im, k) / length
+        ...num.divide(signals.length).toArray()
       );
 
       return {
-        freq: k > length / 2 ? k - length : k,
+        freq: k > signals.length / 2 ? k - signals.length : k,
         amp,
         phase,
       };
     })
     .sort((a, b) => b.amp - a.amp);
-};
 
 // Cumulative centre of each epicycle at time t (chain[0] is the origin,
 // the last entry is the traced point itself).

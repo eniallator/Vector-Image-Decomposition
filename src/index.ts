@@ -1,13 +1,13 @@
 import { dom } from "niall-utils/ui";
 
-import { decomposeSvg } from "./decomposeSvg.ts";
 import { epicycleChain, toEpicycles } from "./epicycle.ts";
+import { decomposeSvg } from "./decomposeSvg.ts";
 import { appMethods } from "./lib/index.ts";
-import { safeAt } from "./safeGet.ts";
 
-import type { Config } from "./config.ts";
 import type { Epicycle } from "./epicycle.ts";
+import type { Config } from "./config.ts";
 import type { StatefulAppContext } from "./lib/index.ts";
+import { safeAt } from "./safeGet.ts";
 
 const SCALE = 10;
 const PERIOD_SECONDS = 5;
