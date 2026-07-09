@@ -1,0 +1,95 @@
+import {
+  buttonParser,
+  checkboxParser,
+  colorParser,
+  createParsers,
+  datetimeParser,
+  fileParser,
+  listParser,
+  numberParser,
+  rangeParser,
+  selectParser,
+  tableParser,
+  textParser,
+} from "seriform";
+
+import type { InitParserObject, SeriFormOptions } from "seriform";
+
+export const options: SeriFormOptions = { query: location.search };
+export const config = createParsers({
+  "example-checkbox": checkboxParser({
+    label: "Example Checkbox",
+    title: "Example title",
+    default: true,
+  }),
+  "example-range": rangeParser({
+    label: "Example Range",
+    default: 7.5,
+    attrs: { min: "1", max: "10", step: "0.5" },
+  }),
+  "example-number": numberParser({
+    label: "Example Number",
+    default: 5,
+    attrs: { min: "1", max: "10" },
+  }),
+  "example-colour": colorParser({
+    label: "Example Colour",
+    default: "ff5a5f",
+  }),
+  "example-button": buttonParser({
+    text: "Example Button",
+    attrs: { class: "primary wrap-text" },
+  }),
+  "example-file": fileParser({
+    text: "Example File",
+    attrs: { accept: "image/*" },
+  }),
+  "example-text": textParser({
+    label: "Example Text",
+    default: "Hello",
+    area: true,
+    attrs: { placeholder: "World!" },
+  }),
+  "example-datetime": datetimeParser({
+    label: "Example Date Time",
+    default: new Date("2018-06-14T10:03Z"),
+  }),
+  "example-select": selectParser({
+    label: "Example Select",
+    default: "bar",
+    options: ["foo", "bar", "baz", "another option"],
+  }),
+  "example-table": tableParser({
+    label: "Example Table",
+    expandable: true,
+    fields: [
+      rangeParser({
+        label: "Range",
+        default: 2,
+        attrs: { min: "0", max: "4", step: "1" },
+      }),
+      checkboxParser({
+        label: "Checkbox",
+        default: false,
+      }),
+      selectParser({
+        label: "Select",
+        default: "Maybe",
+        options: ["Yes", "No", "Maybe"],
+      }),
+    ],
+    default: [
+      [4, true, "Yes"],
+      [1, false, "No"],
+    ],
+  }),
+  "example-list": listParser({
+    label: "Example List",
+    expandable: true,
+    field: colorParser({ default: "ff0000" }),
+    default: ["ff0000", "00ff00", "0000ff"],
+  }),
+});
+
+export type Config =
+  typeof config extends InitParserObject<infer R> ? R : never;
