@@ -16,15 +16,11 @@ export interface Epicycle {
 export const toEpicycles = (signals: ComplexNumber[]): Epicycle[] =>
   signals
     .map((num, k) => {
+      const freq = k > signals.length / 2 ? k - signals.length : k;
       const [amp, phase] = cartesianToPolar(
-        ...num.divide(signals.length).toArray()
+        ...num.copy().divide(signals.length).toArray()
       );
-
-      return {
-        freq: k > signals.length / 2 ? k - signals.length : k,
-        amp,
-        phase,
-      };
+      return { freq, amp, phase };
     })
     .sort((a, b) => b.amp - a.amp);
 

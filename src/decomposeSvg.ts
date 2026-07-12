@@ -1,28 +1,59 @@
+import { Option } from "niall-utils";
+
+import { createComplex } from "./complex.ts";
 import { computeFft } from "./fft.ts";
+import { convertPathToAbsolute } from "./pathToAbsolute.ts";
 
-import { createComplex, type ComplexNumber } from "./complex.ts";
+import type { ComplexNumber } from "./complex.ts";
 
-export const decomposeSvgPath = (
+const pointsOnPathEl = (
   pathEl: SVGPathElement,
   sampleCount: number = 256
 ): ComplexNumber[] => {
+  console.log(pathEl);
   const length = pathEl.getTotalLength();
 
-  const out = new Array<ComplexNumber>(sampleCount);
-
-  for (let i = 0; i < sampleCount; i++) {
+  return new Array(sampleCount).fill(undefined).map((_, i) => {
     const point = pathEl.getPointAtLength((i / sampleCount) * length);
-
-    out[i] = createComplex(point.x, point.y);
-  }
-
-  return computeFft(out, false);
+    return createComplex(point.x, point.y);
+  });
 };
 
+const compoundToAtomicPaths = (pathEl: SVGPathElement): SVGPathElement[] =>
+  Option.from(pathEl.getAttribute("d"))
+    .map(convertPathToAbsolute)
+    .map(absPath =>
+      absPath.split(/(?=M)/i).map(atomicPath => {
+        const path = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "path"
+        );
+        path.setAttribute("d", atomicPath);
+        for (const attr of pathEl.attributes) {
+          if (attr.name.toLowerCase() !== "d") {
+            path.setAttribute(attr.name, attr.value);
+          }
+        }
+        return path;
+      })
+    )
+    .getOrElse(() => []);
+
+// Connect the starts and ends of each path element here, where it minimizes the total lengths of the connections
 export const decomposeSvg = (
   svgEl: SVGElement,
   sampleCount: number = 256
-): ComplexNumber[][] =>
-  [...svgEl.querySelectorAll("path")].map(pathEl =>
-    decomposeSvgPath(pathEl, sampleCount)
+): ComplexNumber[] => {
+  const atomicPaths = [...svgEl.querySelectorAll("path")].flatMap(
+    compoundToAtomicPaths
   );
+  console.log(atomicPaths);
+  const allPathPoints = atomicPaths.map(pathEl =>
+    pointsOnPathEl(pathEl, sampleCount)
+  );
+
+  // TODO: Traveling salesman problem
+  const solvedPoints = allPathPoints;
+
+  return computeFft(solvedPoints.flat(), false);
+};

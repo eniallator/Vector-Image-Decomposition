@@ -1,7 +1,8 @@
 import { createComplex, unsafeComplexNumber } from "./complex.ts";
-import { safeGet } from "./safeGet.ts";
+import { safeAt } from "./safeAt.ts";
 
 import type { ComplexNumber } from "./complex.ts";
+import { partition } from "./partition.ts";
 
 // Signals has length 2^x
 export const computeFft = (
@@ -13,13 +14,7 @@ export const computeFft = (
 
   const halfN = n / 2;
 
-  const even = new Array<ComplexNumber>(halfN);
-  const odd = new Array<ComplexNumber>(halfN);
-
-  for (let i = 0; i < halfN; i++) {
-    even[i] = safeGet(signals, 2 * i);
-    odd[i] = safeGet(signals, 2 * i + 1);
-  }
+  const [even, odd] = partition(signals, (_, i) => i % 2 === 0);
 
   const evenFFT = computeFft(even, inverse);
   const oddFFT = computeFft(odd, inverse);
@@ -31,8 +26,8 @@ export const computeFft = (
     const twiddleRe = Math.cos(angle);
     const twiddleIm = Math.sin(angle);
 
-    const currOdd = safeGet(oddFFT, k);
-    const currEven = safeGet(evenFFT, k);
+    const currOdd = safeAt(oddFFT, k);
+    const currEven = safeAt(evenFFT, k);
 
     const t = createComplex(
       currOdd.x() * twiddleRe - currOdd.y() * twiddleIm,
