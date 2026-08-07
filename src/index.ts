@@ -1,3 +1,4 @@
+import { pipe } from "niall-utils";
 import { dom } from "niall-utils/ui";
 import { Vector } from "vectyped";
 
@@ -73,24 +74,20 @@ const svgToState = (
 
   wrapper.appendChild(svgEl);
   document.body.appendChild(wrapper);
-  const bbox = svgEl.getBBox();
-  wrapper.remove();
-
-  console.log(
-    dimensions.toString(),
-    bbox,
-    svgEl.getBoundingClientRect(),
-    Vector.create(bbox.width, bbox.height).toString(),
-    dimensions.copy().divide(Vector.create(bbox.width, bbox.height)).getMin()
+  const bbox = [...svgEl.querySelectorAll("path")].reduce(
+    ({ tl, br }, pathEl) =>
+      pipe(pathEl.getBBox(), b => ({
+        tl: tl.min(Vector.create(b.x, b.y)),
+        br: br.max(Vector.create(b.x + b.width, b.y + b.height)),
+      })),
+    { tl: Vector.fill(2, Infinity), br: Vector.fill(2, -Infinity) }
   );
+  const bboxSize = bbox.br.copy().sub(bbox.tl);
+  wrapper.remove();
 
   return {
     epicycles,
-    scale: dimensions
-      .copy()
-      .divide(Vector.create(bbox.width, bbox.height))
-      .getMin(),
-    // scale: Vector.create(bbox.width, bbox.height).divide(dimensions).getMin(),
+    scale: dimensions.copy().divide(bboxSize).getMin(),
   };
 };
 
