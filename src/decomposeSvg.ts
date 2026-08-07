@@ -1,6 +1,10 @@
 import { Option } from "niall-utils";
 
-import { createComplex, type ComplexNumber } from "./complex.ts";
+import {
+  createComplex,
+  unsafeComplexNumber,
+  type ComplexNumber,
+} from "./complex.ts";
 import { computeFft } from "./fft.ts";
 import { convertPathToAbsolute } from "./pathToAbsolute.ts";
 import { safeAt } from "./safeAt.ts";
@@ -63,6 +67,16 @@ const compoundToAtomicPaths = (pathEl: SVGPathElement): SVGPathElement[] =>
     )
     .getOrElse(() => []);
 
+// Shifts every point by the same offset so the shape's top-left corner sits
+// at the origin, since nothing downstream translates the epicycle drawing.
+const normalizePath = (points: ComplexNumber[]): ComplexNumber[] => {
+  const offset = points.reduce(
+    (acc, point) => acc.min(point),
+    createComplex(Infinity, Infinity)
+  );
+  return points.map(point => unsafeComplexNumber(point.copy().sub(offset)));
+};
+
 // Connect the starts and ends of each path element here, where it minimizes the total lengths of the connections
 export const decomposeSvg = (
   svgEl: SVGElement,
@@ -80,5 +94,5 @@ export const decomposeSvg = (
   // TODO: Traveling salesman problem
   const solvedPoints = allPathPoints;
 
-  return computeFft(solvedPoints.flat(), false);
+  return computeFft(normalizePath(solvedPoints.flat()), false);
 };
