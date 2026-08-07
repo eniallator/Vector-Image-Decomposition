@@ -1,6 +1,10 @@
-import { createParsers, numberParser, textParser } from "seriform";
-
-import type { InitParserObject, SeriFormOptions } from "seriform";
+import {
+  createParsers,
+  numberParser,
+  textParser,
+  type InitParserObject,
+  type SeriFormOptions,
+} from "seriform";
 
 export const options: SeriFormOptions = { query: location.search };
 export const config = createParsers({

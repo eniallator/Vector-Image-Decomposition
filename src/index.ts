@@ -1,14 +1,11 @@
 import { dom } from "niall-utils/ui";
 import { Vector } from "vectyped";
 
-import { decomposeSvg } from "./decomposeSvg.ts";
-import { epicycleChain, toEpicycles } from "./epicycle.ts";
-import { appMethods } from "./lib/index.ts";
-import { safeAt } from "./safeAt.ts";
-
 import type { Config } from "./config.ts";
-import type { Epicycle } from "./epicycle.ts";
-import type { StatefulAppContext } from "./lib/index.ts";
+import { decomposeSvg } from "./decomposeSvg.ts";
+import { epicycleChain, toEpicycles, type Epicycle } from "./epicycle.ts";
+import { appMethods, type StatefulAppContext } from "./lib/index.ts";
+import { safeAt } from "./safeAt.ts";
 
 interface State {
   epicycles: Epicycle[];

@@ -1,8 +1,7 @@
+import type { FillTuple } from "niall-utils/core";
 import { mapAccumulate } from "niall-utils/functional";
 
 import { safeAt } from "./safeAt.ts";
-
-import type { FillTuple } from "niall-utils/core";
 
 interface Point {
   x: number;

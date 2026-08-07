@@ -1,11 +1,9 @@
 import { Option } from "niall-utils";
 
-import { createComplex } from "./complex.ts";
+import { createComplex, type ComplexNumber } from "./complex.ts";
 import { computeFft } from "./fft.ts";
 import { convertPathToAbsolute } from "./pathToAbsolute.ts";
 import { safeAt } from "./safeAt.ts";
-
-import type { ComplexNumber } from "./complex.ts";
 
 const pointsOnPathEl = (
   pathEl: SVGPathElement,
@@ -22,10 +20,7 @@ const pointsOnPathEl = (
 // Splits `total` samples across `weights` proportionally, guaranteeing the
 // resulting counts sum to exactly `total` (needed since computeFft requires
 // a power-of-2 length overall).
-const distributeSampleCounts = (
-  weights: number[],
-  total: number
-): number[] => {
+const distributeSampleCounts = (weights: number[], total: number): number[] => {
   const sumWeights = weights.reduce((acc, weight) => acc + weight, 0);
   const raw =
     sumWeights === 0

@@ -1,12 +1,13 @@
 import { dom, raise } from "niall-utils";
 import { SeriForm } from "seriform";
 
-import { config, options } from "./config.ts";
+import { config, options, type Config } from "./config.ts";
 import { app } from "./index.ts";
-import { Mouse } from "./lib/index.ts";
-
-import type { Config } from "./config.ts";
-import type { AppContext, StatefulAppContext } from "./lib/index.ts";
+import {
+  Mouse,
+  type AppContext,
+  type StatefulAppContext,
+} from "./lib/index.ts";
 
 const updateCanvasBounds = (canvas: HTMLCanvasElement) => {
   const { width, height } = canvas.getBoundingClientRect();
