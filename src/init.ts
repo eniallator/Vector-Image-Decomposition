@@ -76,6 +76,8 @@ const statefulCtx: StatefulAppContext<Config, typeof state> = {
   },
 };
 
+app.postInit?.(statefulCtx);
+
 window.onresize = evt => {
   updateCanvasBounds(canvas);
   app.onResize?.(evt, statefulCtx);

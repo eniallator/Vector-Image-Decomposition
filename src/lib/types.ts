@@ -31,6 +31,10 @@ export interface AppMethods<
   init: S extends null
     ? (this: AppMethods<R, S>, appContext: AppContext<R>) => void
     : (this: AppMethods<R, S>, appContext: AppContext<R>) => S;
+  postInit?: (
+    this: AppMethods<R, S>,
+    appContext: StatefulAppContext<R, S>
+  ) => void;
   animationFrame?: (
     this: AppMethods<R, S>,
     appContext: StatefulAppContext<R, S>

@@ -1,8 +1,8 @@
+import { partition } from "niall-utils/data";
 import { createComplex, unsafeComplexNumber } from "./complex.ts";
 import { safeAt } from "./safeAt.ts";
 
 import type { ComplexNumber } from "./complex.ts";
-import { partition } from "./partition.ts";
 
 // Signals has length 2^x
 export const computeFft = (

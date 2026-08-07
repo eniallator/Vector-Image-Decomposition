@@ -1,93 +1,39 @@
-import {
-  buttonParser,
-  checkboxParser,
-  colorParser,
-  createParsers,
-  datetimeParser,
-  fileParser,
-  listParser,
-  numberParser,
-  rangeParser,
-  selectParser,
-  tableParser,
-  textParser,
-} from "seriform";
+import { createParsers, numberParser, textParser } from "seriform";
 
 import type { InitParserObject, SeriFormOptions } from "seriform";
 
 export const options: SeriFormOptions = { query: location.search };
 export const config = createParsers({
-  "example-checkbox": checkboxParser({
-    label: "Example Checkbox",
-    title: "Example title",
-    default: true,
-  }),
-  "example-range": rangeParser({
-    label: "Example Range",
-    default: 7.5,
-    attrs: { min: "1", max: "10", step: "0.5" },
-  }),
-  "example-number": numberParser({
-    label: "Example Number",
-    default: 5,
-    attrs: { min: "1", max: "10" },
-  }),
-  "example-colour": colorParser({
-    label: "Example Colour",
-    default: "ff5a5f",
-  }),
-  "example-button": buttonParser({
-    text: "Example Button",
-    attrs: { class: "primary wrap-text" },
-  }),
-  "example-file": fileParser({
-    text: "Example File",
-    attrs: { accept: "image/*" },
-  }),
-  "example-text": textParser({
-    label: "Example Text",
-    default: "Hello",
+  svg: textParser({
+    label: "SVG Text",
+    default: `<svg xmlns="http://www.w3.org/2000/svg" width="87.868" height="56.641" fill="#d4d4d4" xmlns:v="https://vecta.io/nano">
+      <text xml:space="preserve" x="89.509" y="36.488" transform="scale(.81649657 1.2247449)" font-weight="600" font-size="39.192" font-family="Noto Sans Mono" writing-mode="lr-tb" direction="ltr" fill="#d4d4d4">
+        <tspan x="89.509" y="36.488">}</tspan>
+      </text>
+      <path d="M68.32 6.656c-1.259 0-2.293.299-3.104.896-.789.576-1.473 1.386-2.049 2.432h-.191l-.545-3.008h-7.135v2.783l4.063.512v10.752l-4.799.77v2.527h13.504v-2.527l-4.736-.77V15.84c0-1.003.17-1.92.512-2.752.363-.832.876-1.494 1.537-1.984.683-.491 1.503-.734 2.463-.734.512 0 .991.052 1.439.158.469.107.866.235 1.186.385l1.055-3.648c-.533-.235-1.076-.393-1.631-.479s-1.078-.129-1.568-.129zm-42.687 0c-1.813 0-3.371.331-4.672.992-1.28.661-2.263 1.674-2.945 3.039-.661 1.344-.992 3.062-.992 5.152 0 1.984.309 3.626.928 4.928.64 1.301 1.579 2.272 2.816 2.912 1.259.64 2.816.961 4.672.961a13.49 13.49 0 0 0 2.656-.256c.875-.171 1.717-.46 2.527-.865v-3.551c-.789.448-1.588.779-2.398.992-.811.192-1.601.287-2.369.287-1.045 0-1.931-.18-2.656-.543-.704-.384-1.237-.982-1.6-1.793-.363-.832-.543-1.898-.543-3.199 0-1.259.17-2.305.512-3.137.341-.853.864-1.483 1.568-1.889.725-.427 1.631-.639 2.719-.639.533 0 1.142.063 1.824.191s1.42.362 2.209.703l1.15-3.168a10.18 10.18 0 0 0-2.654-.863c-.917-.171-1.835-.256-2.752-.256zM47.039 0v5.824l.033 1.152.096 1.119.16 1.088h-.191a4.8 4.8 0 0 0-1.186-1.344 4.78 4.78 0 0 0-1.631-.863c-.597-.213-1.281-.32-2.049-.32-1.579 0-2.89.372-3.936 1.119S36.512 9.568 36 10.912c-.491 1.323-.736 2.892-.736 4.705 0 1.365.139 2.602.416 3.711s.693 2.058 1.248 2.848A5.95 5.95 0 0 0 39.039 24c.832.426 1.803.641 2.912.641.768 0 1.461-.107 2.08-.32a5.15 5.15 0 0 0 1.664-.863 6.04 6.04 0 0 0 1.248-1.408h.193l.703 2.271h3.104V0zm-3.615 9.92c.981 0 1.75.256 2.305.768.555.491.939 1.174 1.152 2.049.235.853.352 1.846.352 2.977v.543c0 1.643-.331 2.913-.992 3.809-.64.875-1.621 1.313-2.943 1.313-1.344 0-2.348-.448-3.01-1.344-.661-.917-.99-2.316-.99-4.193 0-1.963.341-3.435 1.023-4.416.704-1.003 1.738-1.504 3.104-1.504z" fill="#fccee8"/>
+      <path d="M64.031 38.656c-1.813 0-3.371.331-4.672.992-1.28.661-2.261 1.674-2.943 3.039-.661 1.344-.992 3.062-.992 5.152 0 1.984.309 3.626.928 4.928.64 1.301 1.579 2.272 2.816 2.912 1.259.64 2.816.961 4.672.961a13.49 13.49 0 0 0 2.656-.256c.875-.171 1.717-.46 2.527-.865v-3.551a10.02 10.02 0 0 1-2.4.992 10.25 10.25 0 0 1-2.367.287c-1.045 0-1.931-.18-2.656-.543-.704-.384-1.237-.982-1.6-1.793-.363-.832-.545-1.898-.545-3.199 0-1.259.172-2.305.514-3.137.341-.853.862-1.483 1.566-1.889.725-.427 1.633-.639 2.721-.639.533 0 1.142.063 1.824.191s1.418.362 2.207.703l1.152-3.168a10.2 10.2 0 0 0-2.656-.863c-.917-.171-1.835-.256-2.752-.256zm-38.047 0c-.832 0-1.589.095-2.271.287a5.4 5.4 0 0 0-1.824.896 4.6 4.6 0 0 0-1.312 1.473h-.225l-.639-2.336h-3.072V56.32h4v-8.447c0-1.856.309-3.308.928-4.354.619-1.067 1.653-1.6 3.104-1.6 1.088 0 1.898.321 2.432.961.533.619.801 1.599.801 2.943V56.32h4V44.896c0-2.069-.523-3.627-1.568-4.672s-2.496-1.568-4.352-1.568zm18.848 0c-1.813 0-3.371.331-4.672.992-1.28.661-2.261 1.674-2.943 3.039-.661 1.344-.992 3.062-.992 5.152 0 1.984.309 3.626.928 4.928.64 1.301 1.579 2.272 2.816 2.912 1.259.64 2.816.961 4.672.961a13.49 13.49 0 0 0 2.656-.256c.875-.171 1.717-.46 2.527-.865v-3.551a10.02 10.02 0 0 1-2.4.992 10.25 10.25 0 0 1-2.367.287c-1.045 0-1.931-.18-2.656-.543-.704-.384-1.237-.982-1.6-1.793-.363-.832-.545-1.898-.545-3.199 0-1.259.17-2.305.512-3.137.341-.853.864-1.483 1.568-1.889.725-.427 1.633-.639 2.721-.639.533 0 1.142.063 1.824.191s1.418.362 2.207.703l1.152-3.168a10.2 10.2 0 0 0-2.656-.863c-.917-.171-1.835-.256-2.752-.256z"/>
+      <text xml:space="preserve" x="-5.409" y="36.488" transform="scale(.8164977 1.2247432)" font-weight="600" font-size="39.192" font-family="Noto Sans Mono" writing-mode="lr-tb" direction="ltr" fill="#d4d4d4">
+        <tspan x="-5.409" y="36.488">{</tspan>
+      </text>
+    </svg>`,
     area: true,
-    attrs: { placeholder: "World!" },
+    attrs: { rows: 5, style: "height: unset !important" },
   }),
-  "example-datetime": datetimeParser({
-    label: "Example Date Time",
-    default: new Date("2018-06-14T10:03Z"),
+  period: numberParser({
+    label: "Period (Seconds)",
+    default: 10,
+    attrs: { min: 0 },
   }),
-  "example-select": selectParser({
-    label: "Example Select",
-    default: "bar",
-    options: ["foo", "bar", "baz", "another option"],
+  "sample-power": numberParser({
+    label: "Sample Count Power of 2",
+    title: "Controls the level of detail of the original SVG",
+    default: 8,
+    attrs: { min: 0, max: 20 },
   }),
-  "example-table": tableParser({
-    label: "Example Table",
-    expandable: true,
-    fields: [
-      rangeParser({
-        label: "Range",
-        default: 2,
-        attrs: { min: "0", max: "4", step: "1" },
-      }),
-      checkboxParser({
-        label: "Checkbox",
-        default: false,
-      }),
-      selectParser({
-        label: "Select",
-        default: "Maybe",
-        options: ["Yes", "No", "Maybe"],
-      }),
-    ],
-    default: [
-      [4, true, "Yes"],
-      [1, false, "No"],
-    ],
-  }),
-  "example-list": listParser({
-    label: "Example List",
-    expandable: true,
-    field: colorParser({ default: "ff0000" }),
-    default: ["ff0000", "00ff00", "0000ff"],
+  "trace-steps": numberParser({
+    label: "Number of Trace Steps",
+    default: 200,
+    attrs: { min: 1, max: 5e3 },
   }),
 });
 
